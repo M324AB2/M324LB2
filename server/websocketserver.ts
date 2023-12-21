@@ -12,11 +12,21 @@ const typingUsers: User[] = [];
 const broadcastMessage = (message: Message) => {
   console.log('Broadcasting message', message);
   websocketServer.clients.forEach((client) => {
-    client.send(JSON.stringify(message));
+    if (client.readyState === WebSocket.OPEN) {
+      client.send(JSON.stringify(message));
+    }
   });
 };
 
-// Intiiate the websocket server
+// Function to broadcast the list of active users
+const broadcastActiveUsers = () => {
+  broadcastMessage({
+    type: 'activeUsers',
+    users: activeUsers.map(user => ({ id: user.id, name: user.name })),
+  });
+};
+
+// Initialize the websocket server
 const initializeWebsocketServer = (server: Server) => {
   websocketServer = new WSServer({ server });
   websocketServer.on('connection', onConnection);
@@ -27,6 +37,10 @@ const onConnection = (ws: WebSocket) => {
   console.log('New websocket connection');
   ws.on('message', (message) => onMessage(ws, message));
   ws.on('close', () => onClose(ws));
+  ws.send(JSON.stringify({
+    type: 'activeUsers',
+    users: activeUsers.map(user => ({ id: user.id, name: user.name }))
+  }));
 };
 
 // If a connection is closed, the onClose function is called
@@ -35,12 +49,8 @@ const onClose = (ws: WebSocket) => {
   const userIndex = activeUsers.findIndex((user) => user.ws === ws);
   if (userIndex !== -1) {
     console.log('User disconnected:', activeUsers[userIndex].name);
-    const removedUser = activeUsers.splice(userIndex, 1);
-    removeTypingStatus(removedUser[0].id);
-    broadcastMessage({
-      type: 'activeUsers',
-      users: activeUsers,
-    });
+    activeUsers.splice(userIndex, 1);
+    broadcastActiveUsers();
   }
 };
 

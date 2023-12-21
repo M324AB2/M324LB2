@@ -8,6 +8,7 @@
     console.log('WebSocket connected!');
     socket.send(JSON.stringify({ type: 'newUser', user: myUser }));
   });
+
   socket.addEventListener('message', (event) => {
     const message = JSON.parse(event.data);
     console.log('WebSocket message:', message);
@@ -30,45 +31,44 @@
         break;
     }
   });
-  socket.addEventListener('close', (event) => {
+
+  socket.addEventListener('close', () => {
     console.log('WebSocket closed.');
   });
+
   socket.addEventListener('error', (event) => {
     console.error('WebSocket error:', event);
   });
 
+  const updateActiveUsersList = (users) => {
+    const usersList = document.getElementById('activeUsersList');
+    users.forEach(user => {
+      const userElement = document.createElement('li');
+      userElement.textContent = user.name;
+      usersList.appendChild(userElement);
+    });
+  };
+
   // Wait until the DOM is loaded before adding event listeners
-  document.addEventListener('DOMContentLoaded', (event) => {
+  document.addEventListener('DOMContentLoaded', () => {
     // Send a message when the send button is clicked
     document.getElementById('sendButton').addEventListener('click', () => {
       const message = document.getElementById('messageInput').value;
       socket.send(JSON.stringify({ type: 'message', message, user: myUser }));
       document.getElementById('messageInput').value = '';
     });
-  });
 
-  document.addEventListener('keydown', (event) => {
-    // Only send if the typed in key is not a modifier key
-    if (event.key.length === 1) {
-      socket.send(JSON.stringify({ type: 'typing', user: myUser }));
-    }
-    // Only send if the typed in key is the enter key
-    if (event.key === 'Enter') {
-      const message = document.getElementById('messageInput').value;
-      socket.send(JSON.stringify({ type: 'message', message, user: myUser }));
-      document.getElementById('messageInput').value = '';
-    }
-  });
-
-  // Function to update the active users list in the sidebar
-  function updateActiveUsersList(users) {
-    const activeUsersList = document.getElementById('activeUsersList');
-    activeUsersList.innerHTML = ''; // Clear previous list
-
-    users.forEach((user) => {
-      const listItem = document.createElement('li');
-      listItem.textContent = user.myUser; 
-      activeUsersList.appendChild(listItem);
+    document.addEventListener('keydown', (event) => {
+      // Only send if the typed in key is not a modifier key
+      if (event.key.length === 1) {
+        socket.send(JSON.stringify({ type: 'typing', user: myUser }));
+      }
+      // Only send if the typed in key is the enter key
+      if (event.key === 'Enter') {
+        const message = document.getElementById('messageInput').value;
+        socket.send(JSON.stringify({ type: 'message', message, user: myUser }));
+        document.getElementById('messageInput').value = '';
+      }
     });
-  }
+  });
 })();
