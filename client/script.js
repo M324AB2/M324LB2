@@ -21,6 +21,7 @@
         break;
       case 'activeUsers':
         activeUsers = message.users;
+        updateActiveUsersList(activeUsers);
         break;
       case 'typing':
         typingUsers = message.users;
@@ -58,4 +59,16 @@
       document.getElementById('messageInput').value = '';
     }
   });
+
+  // Function to update the active users list in the sidebar
+  function updateActiveUsersList(users) {
+    const activeUsersList = document.getElementById('activeUsersList');
+    activeUsersList.innerHTML = ''; // Clear previous list
+
+    users.forEach((user) => {
+      const listItem = document.createElement('li');
+      listItem.textContent = user.myUser; 
+      activeUsersList.appendChild(listItem);
+    });
+  }
 })();
