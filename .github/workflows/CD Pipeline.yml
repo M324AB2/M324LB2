@@ -1,4 +1,4 @@
-name: cd
+name: CD-Pipeline
 
 on: 
   push:
@@ -26,7 +26,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
-          tags: 'shanthosh04/m324-typescript:${{ env.TAG_NAME }}'
+          tags: 'erdamca/m324lb1:${{ env.TAG_NAME }}'
 
       - name: Set up Kubectl
         uses: azure/setup-kubectl@v1
@@ -49,6 +49,6 @@ jobs:
           replacement-method: defined
         env:
           KUBERNETES_NAMESPACE: m324-2
-          IMAGE_TAG: 'shanthosh04/m324-typescript:${{ env.TAG_NAME }}'
-          APP_NAME: my-app-sivas
+          IMAGE_TAG: 'erdamca/m324lb1:${{ env.TAG_NAME }}'
+          APP_NAME: our-app-yusuf-sivas
           BASE_URL: ss.m324.hackerman.ch

@@ -1,10 +1,7 @@
-name: ci
+name: CI-Pipeline
 
 on:
   pull_request:
-    branches:
-      - main
-      - development
     types:
       - opened
       - synchronize
@@ -20,4 +17,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: false
-          tags: shanthosh04/m324-typescript:latest
+          tags: erdamca/m324lb1:latest
