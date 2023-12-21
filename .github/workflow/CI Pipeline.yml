@@ -1,0 +1,23 @@
+name: ci
+
+on:
+  pull_request:
+    branches:
+      - main
+      - development
+    types:
+      - opened
+      - synchronize
+jobs:
+  docker:
+    runs-on: [self-hosted, shanthosh]
+    steps:
+      -
+        name: Checkout Repository
+        uses: actions/checkout@v2
+      -      
+        name: Build 
+        uses: docker/build-push-action@v5
+        with:
+          push: false
+          tags: shanthosh04/m324-typescript:latest
