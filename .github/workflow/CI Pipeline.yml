@@ -10,7 +10,7 @@ on:
       - synchronize
 jobs:
   docker:
-    runs-on: [self-hosted, shanthosh]
+    runs-on: [self-hosted]
     steps:
       -
         name: Checkout Repository
