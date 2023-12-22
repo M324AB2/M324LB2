@@ -1,7 +1,6 @@
 (async () => {
   const myUser = await generateRandomUser();
   let activeUsers = [];
-  let typingUsers = [];
 
   const socket = new WebSocket(generateBackendUrl());
 
@@ -43,9 +42,7 @@
     const usersList = document.getElementById('activeUsers');
     const parentElement = usersList.parentNode;
     parentElement.removeChild(usersList);
-  });
 
-  
 
   socket.addEventListener('error', (event) => {
     console.error('WebSocket error:', event);
@@ -61,50 +58,40 @@
       const userElement = document.createElement('li');
       userElement.textContent = user.name;
       usersList.appendChild(userElement);
+
     });
   };
 
-
-  // Update typing indicator display
-  const updateTypingIndicator = () => {
-    const typingIndicator = document.getElementById('typingIndicator');
-    if (typingUsers.length > 0) {
-      const userNames = typingUsers.map(user => user.name).join(', ');
-      typingIndicator.textContent = `${userNames} ${typingUsers.length > 1 ? 'are' : 'is'} typing...`;
-    } else {
-      typingIndicator.textContent = '';
-    }
-  };
-
-  // Debounce function to limit the frequency of typing status messages
-  const debounce = (func, delay) => {
-    let debounceTimer;
-    return function() {
-      const context = this, args = arguments;
-      clearTimeout(debounceTimer);
-      debounceTimer = setTimeout(() => func.apply(context, args), delay);
-    };
-  };
-
-  // Function to send typing status
-  const sendTypingStatus = debounce(() => {
-    socket.send(JSON.stringify({ type: 'typing', user: myUser }));
-  }, 500);
 
   // Event listeners
   document.addEventListener('DOMContentLoaded', () => {
+    // Dark Mode Toggle
+    document.getElementById('themeToggle').addEventListener('change', (event) => {
+      document.body.classList.toggle('dark-mode', event.target.checked);
+    });
+
     // Send message button
     document.getElementById('sendButton').addEventListener('click', sendMessage);
 
-    // Enter key to send message and typing event listener
+    // Enter key to send message
     document.getElementById('messageInput').addEventListener('keydown', (event) => {
       if (event.key === 'Enter') {
         sendMessage();
-      } else if (event.key.length === 1 || event.key === 'Backspace') {
-        sendTypingStatus();
       }
     });
   });
+
+  // Send message function
+  const sendMessage = () => {
+    const messageInput = document.getElementById('messageInput');
+    const message = messageInput.value.trim();
+    if (message) {
+      socket.send(JSON.stringify({ type: 'message', message, user: myUser }));
+      messageInput.value = '';
+    }
+  };
+})();
+
 
 
 
