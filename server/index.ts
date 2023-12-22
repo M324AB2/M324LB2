@@ -21,7 +21,7 @@ if (env !== 'production' && env !== 'test') {
       liveReloadServer.refresh('/');
     }, 100);
   });
-  // use livereload middleware
+    // use livereload middleware
   app.use(connectLiveReload());
 }
 
@@ -31,7 +31,12 @@ app.use(express.static('client'));
 app.get('/', (req: Request, res: Response) => {
   res.sendFile(__dirname + '/client/index.html');
 });
-// Initialize the websocket server
+
+// Healthcheck endpoint
+app.get('/healthcheck', (req: Request, res: Response) => {
+  res.status(200).send('OK');
+});
+
 initializeWebsocketServer(server);
 
 //start the web server
