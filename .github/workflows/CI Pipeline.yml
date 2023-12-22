@@ -17,4 +17,4 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: false
-          tags: erdamca/m324lb1:latest
+          tags: shanthosh04/m324lb1:latest
