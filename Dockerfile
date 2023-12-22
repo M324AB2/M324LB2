@@ -1,5 +1,5 @@
 # Verwenden eines offiziellen Node.js Basisimages
-FROM node:18
+FROM node:20
 
 # Arbeitsverzeichnis im Container festlegen
 WORKDIR /app
@@ -8,19 +8,19 @@ WORKDIR /app
 COPY package*.json ./
 
 # Installieren von Abhängigkeiten
-RUN npm install --force
+RUN yarn install
 
 # Kopieren des Quellcodes in das Arbeitsverzeichnis
 COPY . .
 
 # Linting durchführen
-RUN npm run lint
+RUN yarn lint
 
 # Tests durchführen
-RUN npm run test
+RUN yarn test
 
 # Build durchführen
-RUN npm run build
+RUN yarn build
 
 # Der Startbefehl, der beim Ausführen des Containers ausgeführt wird
-CMD ["npm", "run" ,"start"]
+CMD yarn start
