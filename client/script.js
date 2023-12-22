@@ -1,6 +1,7 @@
 (async () => {
   const myUser = await generateRandomUser();
   let activeUsers = [];
+  let typingUsers = [];
 
   const socket = new WebSocket(generateBackendUrl());
   socket.addEventListener('open', () => {
@@ -37,7 +38,7 @@
     const usersList = document.getElementById('activeUsers');
     const parentElement = usersList.parentNode;
     parentElement.removeChild(usersList);
-
+  });
 
   socket.addEventListener('error', (event) => {
     console.error('WebSocket error:', event);
@@ -50,12 +51,14 @@
       const userElement = document.createElement('li');
       userElement.textContent = user.name;
       usersList.appendChild(userElement);
+    });
+  };
 
 
   const updateTypingUsers = (users) => {
     const typingElement = document.getElementById('typingUsers');
     typingElement.textContent = users.length > 0 
-      ? `${users.map(u => u.name).join(', ')} is typing...` 
+      ? `${users.map(u => u.name).join(', ')} is/are typing...` 
       : '';
   };
 
