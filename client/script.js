@@ -1,4 +1,5 @@
 (async () => {
+
   const myUser = await generateRandomUser();
   let activeUsers = [];
 
@@ -10,7 +11,6 @@
     socket.send(JSON.stringify({ type: 'newUser', user: myUser }));
   });
 
-  // WebSocket message event
   socket.addEventListener('message', (event) => {
     const message = JSON.parse(event.data);
     console.log('WebSocket message:', message);
@@ -26,23 +26,25 @@
         activeUsers = message.users;
         updateActiveUsersList(activeUsers);
         break;
+      case 'typing':
+        typingUsers = message.users;
+        break;
       default:
         break;
     }
   });
 
-  // WebSocket close event
+
   socket.addEventListener('close', () => {
     console.log('WebSocket closed.');
     const usersList = document.getElementById('activeUsers');
     const parentElement = usersList.parentNode;
     parentElement.removeChild(usersList);
-  });
 
-  // WebSocket error event
   socket.addEventListener('error', (event) => {
     console.error('WebSocket error:', event);
   });
+
 
   // Update active users list
   const updateActiveUsersList = (users) => {
@@ -52,6 +54,7 @@
       const userElement = document.createElement('li');
       userElement.textContent = user.name;
       usersList.appendChild(userElement);
+
     });
   };
 
@@ -83,3 +86,4 @@
     }
   };
 })();
+
