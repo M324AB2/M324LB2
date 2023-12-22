@@ -14,13 +14,13 @@ RUN npm install
 COPY . .
 
 # Linting durchführen
-RUN npm run lint
+RUN yarn lint
 
 # Tests durchführen
-RUN npm run test
+RUN yarn test
 
 # Build durchführen
-RUN npm run build
+RUN yarn build
 
 # Der Startbefehl, der beim Ausführen des Containers ausgeführt wird
-CMD ["npm", "run" ,"start"]
+CMD yarn start
