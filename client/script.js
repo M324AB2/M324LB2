@@ -1,5 +1,4 @@
 (async () => {
-
   const myUser = await generateRandomUser();
   let activeUsers = [];
   let typingUsers = [];
@@ -27,6 +26,7 @@
         break;
       case 'typing':
         typingUsers = message.users;
+        updateTypingUsers(typingUsers);
         break;
       default:
         break;
@@ -38,8 +38,7 @@
     const usersList = document.getElementById('activeUsers');
     const parentElement = usersList.parentNode;
     parentElement.removeChild(usersList);
-  }
-  );
+  });
 
   socket.addEventListener('error', (event) => {
     console.error('WebSocket error:', event);
@@ -47,6 +46,7 @@
 
   const updateActiveUsersList = (users) => {
     const usersList = document.getElementById('activeUsers');
+    usersList.innerHTML = ''; // Leere die Liste zuerst
     users.forEach(user => {
       const userElement = document.createElement('li');
       userElement.textContent = user.name;
@@ -54,9 +54,20 @@
     });
   };
 
+  const updateTypingUsers = (users) => {
+    const typingElement = document.getElementById('typingUsers');
+    typingElement.textContent = users.length > 0 
+      ? `${users.map(u => u.name).join(', ')} is/are typing...` 
+      : '';
+  };
+
   // Wait until the DOM is loaded before adding event listeners
   document.addEventListener('DOMContentLoaded', () => {
-    // Send a message when the send button is clicked
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('change', (event) => {
+      document.body.classList.toggle('dark-mode', event.target.checked);
+    });
+
     document.getElementById('sendButton').addEventListener('click', () => {
       const message = document.getElementById('messageInput').value;
       socket.send(JSON.stringify({ type: 'message', message, user: myUser }));
@@ -64,11 +75,9 @@
     });
 
     document.addEventListener('keydown', (event) => {
-      // Only send if the typed in key is not a modifier key
       if (event.key.length === 1) {
         socket.send(JSON.stringify({ type: 'typing', user: myUser }));
       }
-      // Only send if the typed in key is the enter key
       if (event.key === 'Enter') {
         const message = document.getElementById('messageInput').value;
         socket.send(JSON.stringify({ type: 'message', message, user: myUser }));
@@ -77,4 +86,3 @@
     });
   });
 })();
-
