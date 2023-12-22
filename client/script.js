@@ -5,13 +5,13 @@
 
   const socket = new WebSocket(generateBackendUrl());
 
-  // WebSocket open event
+
   socket.addEventListener('open', () => {
     console.log('WebSocket connected!');
     socket.send(JSON.stringify({ type: 'newUser', user: myUser }));
   });
 
-  // WebSocket message event
+
   socket.addEventListener('message', (event) => {
     const message = JSON.parse(event.data);
     console.log('WebSocket message:', message);
@@ -29,6 +29,7 @@
         break;
       case 'typing':
         typingUsers = message.users;
+
         updateTypingIndicator();
         break;
       default:
@@ -36,7 +37,7 @@
     }
   });
 
-  // WebSocket close event
+
   socket.addEventListener('close', () => {
     console.log('WebSocket closed.');
     const usersList = document.getElementById('activeUsers');
@@ -44,21 +45,25 @@
     parentElement.removeChild(usersList);
   });
 
-  // WebSocket error event
+  
+
   socket.addEventListener('error', (event) => {
     console.error('WebSocket error:', event);
   });
+
 
   // Update active users list
   const updateActiveUsersList = (users) => {
     const usersList = document.getElementById('activeUsers');
     usersList.innerHTML = '';
+
     users.forEach(user => {
       const userElement = document.createElement('li');
       userElement.textContent = user.name;
       usersList.appendChild(userElement);
     });
   };
+
 
   // Update typing indicator display
   const updateTypingIndicator = () => {
@@ -100,6 +105,8 @@
       }
     });
   });
+
+
 
   // Send message function
   const sendMessage = () => {
