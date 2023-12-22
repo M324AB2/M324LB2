@@ -51,4 +51,4 @@ jobs:
           KUBERNETES_NAMESPACE: m324-2
           IMAGE_TAG: 'erdamca/m324lb1:${{ env.TAG_NAME }}'
           APP_NAME: our-app-yusuf-sivas
-          BASE_URL: ss.m324.hackerman.ch
+          BASE_URL: ykss.m324.hackerman.ch
