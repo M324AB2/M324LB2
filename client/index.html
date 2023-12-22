@@ -10,7 +10,16 @@
     <script src="/utils.js"></script>
     <script src="/script.js"></script>
 </head>
-<body>
+<body class="flex">
+    <!-- Sidebar for active user list -->
+    <div class="bg-gray-200 w-1/4 p-4">
+      <h2 class="text-lg font-bold mb-2">Active Users</h2>
+      <ul id="activeUsers" class="list-disc pl-4">
+        <!-- Active user list will be dynamically populated here -->
+      </ul>
+    </div>
+
+    <!-- Main chat container -->
     <div class="w-full h-screen flex justify-center">
         <div class="max-w-2xl w-full md:w-3/4 lg:w-2/4 flex flex-col">
             <div class="bg-blue-500 px-4 py-4 rounded-b flex justify-between items-center">
@@ -24,6 +33,7 @@
                 </div>
             </div>
             <div class="flex-grow flex flex-col justify-start p-4 gap-4 overflow-auto" id="messages">
+                <!-- Messages will be dynamically populated here -->
             </div>
             <div class="bg-gray-100 px-4 py-4 flex items-center rounded-t">
                 <input 
@@ -40,14 +50,12 @@
                     class="h-6 w-6" 
                     fill="none" 
                     viewBox="0 0 24 24" 
-                    stroke="currentColor"
-                    >
+                    stroke="currentColor">
                         <path 
                         stroke-linecap="round" 
                         stroke-linejoin="round" 
                         stroke-width="2" 
-                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                        />
+                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                     </svg>
                 </button>
             </div>

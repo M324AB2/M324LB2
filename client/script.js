@@ -1,13 +1,16 @@
 (async () => {
   const myUser = await generateRandomUser();
   let activeUsers = [];
-  let typingUsers = [];
 
   const socket = new WebSocket(generateBackendUrl());
+
+  // WebSocket open event
   socket.addEventListener('open', () => {
     console.log('WebSocket connected!');
     socket.send(JSON.stringify({ type: 'newUser', user: myUser }));
   });
+
+  // WebSocket message event
   socket.addEventListener('message', (event) => {
     const message = JSON.parse(event.data);
     console.log('WebSocket message:', message);
@@ -21,59 +24,62 @@
         break;
       case 'activeUsers':
         activeUsers = message.users;
-        break;
-      case 'typing':
-        typingUsers = message.users;
+        updateActiveUsersList(activeUsers);
         break;
       default:
         break;
     }
   });
-  socket.addEventListener('close', (event) => {
+
+  // WebSocket close event
+  socket.addEventListener('close', () => {
     console.log('WebSocket closed.');
+    const usersList = document.getElementById('activeUsers');
+    const parentElement = usersList.parentNode;
+    parentElement.removeChild(usersList);
   });
+
+  // WebSocket error event
   socket.addEventListener('error', (event) => {
     console.error('WebSocket error:', event);
   });
 
-  // Wait until the DOM is loaded before adding event listeners
-  document.addEventListener('DOMContentLoaded', (event) => {
-    // Send a message when the send button is clicked
-    document.getElementById('sendButton').addEventListener('click', () => {
-      const message = document.getElementById('messageInput').value;
-      socket.send(JSON.stringify({ type: 'message', message, user: myUser }));
-      document.getElementById('messageInput').value = '';
+  // Update active users list
+  const updateActiveUsersList = (users) => {
+    const usersList = document.getElementById('activeUsers');
+    usersList.innerHTML = '';
+    users.forEach(user => {
+      const userElement = document.createElement('li');
+      userElement.textContent = user.name;
+      usersList.appendChild(userElement);
     });
-  });
+  };
 
-
+  // Event listeners
   document.addEventListener('DOMContentLoaded', () => {
-    const themeToggleButton = document.getElementById('themeToggle');
-    let isDarkMode = false;
-  
-    themeToggleButton.addEventListener('click', () => {
-        isDarkMode = !isDarkMode;
-        if (isDarkMode) {
-            document.body.classList.add('dark-mode');
-            themeToggleButton.textContent = 'Light Mode';
-        } else {
-            document.body.classList.remove('dark-mode');
-            themeToggleButton.textContent = 'Dark Mode';
-        }
+    // Dark Mode Toggle
+    document.getElementById('themeToggle').addEventListener('change', (event) => {
+      document.body.classList.toggle('dark-mode', event.target.checked);
+    });
+
+    // Send message button
+    document.getElementById('sendButton').addEventListener('click', sendMessage);
+
+    // Enter key to send message
+    document.getElementById('messageInput').addEventListener('keydown', (event) => {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
     });
   });
-  
 
-  document.addEventListener('keydown', (event) => {
-    // Only send if the typed in key is not a modifier key
-    if (event.key.length === 1) {
-      socket.send(JSON.stringify({ type: 'typing', user: myUser }));
-    }
-    // Only send if the typed in key is the enter key
-    if (event.key === 'Enter') {
-      const message = document.getElementById('messageInput').value;
+  // Send message function
+  const sendMessage = () => {
+    const messageInput = document.getElementById('messageInput');
+    const message = messageInput.value.trim();
+    if (message) {
       socket.send(JSON.stringify({ type: 'message', message, user: myUser }));
-      document.getElementById('messageInput').value = '';
+      messageInput.value = '';
     }
-  });
+  };
 })();
