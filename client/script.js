@@ -1,15 +1,15 @@
 (async () => {
-
   const myUser = await generateRandomUser();
   let activeUsers = [];
 
   const socket = new WebSocket(generateBackendUrl());
 
-  // WebSocket open event
+
   socket.addEventListener('open', () => {
     console.log('WebSocket connected!');
     socket.send(JSON.stringify({ type: 'newUser', user: myUser }));
   });
+
 
   socket.addEventListener('message', (event) => {
     const message = JSON.parse(event.data);
@@ -28,6 +28,8 @@
         break;
       case 'typing':
         typingUsers = message.users;
+
+        updateTypingIndicator();
         break;
       default:
         break;
@@ -41,6 +43,7 @@
     const parentElement = usersList.parentNode;
     parentElement.removeChild(usersList);
 
+
   socket.addEventListener('error', (event) => {
     console.error('WebSocket error:', event);
   });
@@ -50,6 +53,7 @@
   const updateActiveUsersList = (users) => {
     const usersList = document.getElementById('activeUsers');
     usersList.innerHTML = '';
+
     users.forEach(user => {
       const userElement = document.createElement('li');
       userElement.textContent = user.name;
@@ -57,6 +61,7 @@
 
     });
   };
+
 
   // Event listeners
   document.addEventListener('DOMContentLoaded', () => {
@@ -87,3 +92,16 @@
   };
 })();
 
+
+
+
+  // Send message function
+  const sendMessage = () => {
+    const messageInput = document.getElementById('messageInput');
+    const message = messageInput.value.trim();
+    if (message) {
+      socket.send(JSON.stringify({ type: 'message', message, user: myUser }));
+      messageInput.value = '';
+    }
+  };
+})();
