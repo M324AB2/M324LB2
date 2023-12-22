@@ -46,6 +46,24 @@
     });
   });
 
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const themeToggleButton = document.getElementById('themeToggle');
+    let isDarkMode = false;
+  
+    themeToggleButton.addEventListener('click', () => {
+        isDarkMode = !isDarkMode;
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            themeToggleButton.textContent = 'Light Mode';
+        } else {
+            document.body.classList.remove('dark-mode');
+            themeToggleButton.textContent = 'Dark Mode';
+        }
+    });
+  });
+  
+
   document.addEventListener('keydown', (event) => {
     // Only send if the typed in key is not a modifier key
     if (event.key.length === 1) {

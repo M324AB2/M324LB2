@@ -1,3 +1,34 @@
 body {
     font-family: 'Roboto', sans-serif;
 }
+
+#themeToggle {
+    background-color: #007bff; 
+    color: black;             
+    border: none;              
+    padding: 10px 15px;    
+    border-radius: 5px;        
+    cursor: pointer;           
+    transition: background-color 0.3s; 
+  }
+  
+  #themeToggle:hover {
+    background-color: #0056b3; 
+  }
+  
+  .dark-mode {
+    background-color: #333;
+    color: white;
+  }
+  
+  .dark-mode .bg-blue-500 {
+    background-color: #007acc;
+  }
+  
+  .dark-mode .bg-gray-100 {
+    background-color: #444;
+  }
+  
+  .dark-mode .text-white {
+    color: #ddd;
+  }
