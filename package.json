@@ -6,7 +6,8 @@
   "scripts": {
     "build": "rimraf ./build && tsc",
     "dev": "npx nodemon",
-    "start": "node build/index.js"
+    "start": "node build/index.js",
+    "lint": "lint"
   },
   "keywords": [],
   "author": "",
