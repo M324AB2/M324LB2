@@ -34,14 +34,18 @@
 
   socket.addEventListener('close', () => {
     console.log('WebSocket closed.');
-  });
+    const usersList = document.getElementById('activeUsers');
+    const parentElement = usersList.parentNode;
+    parentElement.removeChild(usersList);
+  }
+  );
 
   socket.addEventListener('error', (event) => {
     console.error('WebSocket error:', event);
   });
 
   const updateActiveUsersList = (users) => {
-    const usersList = document.getElementById('activeUsersList');
+    const usersList = document.getElementById('activeUsers');
     users.forEach(user => {
       const userElement = document.createElement('li');
       userElement.textContent = user.name;
