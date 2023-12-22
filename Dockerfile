@@ -1,17 +1,26 @@
-# Use the official Node.js image as the base image
+# Verwenden eines offiziellen Node.js Basisimages
 FROM node:18
 
-# Set the working directory inside the container
-WORKDIR ...
+# Arbeitsverzeichnis im Container festlegen
+WORKDIR /app
 
-# Copy the package.json and package-lock.json files to the container
-COPY ...
+# Kopieren der package.json und package-lock.json (falls vorhanden)
+COPY package*.json ./
 
-# Install the dependencies
-RUN ...
+# Installieren von Abhängigkeiten
+RUN npm install --force
 
-# Copy the source code to the container
-COPY ...
+# Kopieren des Quellcodes in das Arbeitsverzeichnis
+COPY . .
 
-# Start the server when the container starts
-CMD ...
+# Linting durchführen
+RUN npm run lint
+
+# Tests durchführen
+RUN npm run test
+
+# Build durchführen
+RUN npm run build
+
+# Der Startbefehl, der beim Ausführen des Containers ausgeführt wird
+CMD ["npm", "run" ,"start"]
