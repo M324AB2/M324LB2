@@ -55,7 +55,7 @@
   const updateTypingUsers = (users) => {
     const typingElement = document.getElementById('typingUsers');
     typingElement.textContent = users.length > 0 
-      ? `${users.map(u => u.name).join(', ')} is/are typing...` 
+      ? `${users.map(u => u.name).join(', ')} is typing...` 
       : '';
   };
 
