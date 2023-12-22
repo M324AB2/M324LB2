@@ -54,6 +54,7 @@
     });
   };
 
+
   const updateTypingUsers = (users) => {
     const typingElement = document.getElementById('typingUsers');
     typingElement.textContent = users.length > 0 
@@ -86,3 +87,4 @@
     });
   });
 })();
+
