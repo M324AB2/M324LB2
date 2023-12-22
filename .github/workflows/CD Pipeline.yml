@@ -1,0 +1,54 @@
+name: CD-Pipeline
+
+on: 
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  docker:
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: [self-hosted]
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Extract tag name
+        id: extract_tag
+        run: echo "TAG_NAME=${GITHUB_REF/refs\/tags\//}" >> $GITHUB_ENV
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: '${{ secrets.DOCKERHUB_USERNAME }}'
+          password: '${{ secrets.DOCKERHUB_TOKEN }}'
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          push: true
+          tags: 'erdamca/m324lb1:${{ env.TAG_NAME }}'
+
+      - name: Set up Kubectl
+        uses: azure/setup-kubectl@v1
+        with:
+          version: 'latest'
+
+      - name: Set Kubernetes Context
+        uses: azure/k8s-set-context@v3
+        with:
+          kubeconfig: '${{ secrets.KUBE_CONFIG }}'
+
+      - name: Replace and Apply Kubernetes Manifests
+        uses: swdotcom/update-and-apply-kubernetes-configs@v1
+        with:
+          k8-config-file-paths: |
+            .k8s/00_namespace.yml
+            .k8s/01_deployment.yml
+            .k8s/02_service.yml
+            .k8s/03_ingress.yml
+          replacement-method: defined
+        env:
+          KUBERNETES_NAMESPACE: m324-2
+          IMAGE_TAG: 'erdamca/m324lb1:${{ env.TAG_NAME }}'
+          APP_NAME: our-app-yusuf-sivas
+          BASE_URL: ss.m324.hackerman.ch
