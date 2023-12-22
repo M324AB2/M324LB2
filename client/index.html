@@ -10,8 +10,8 @@
     <script src="/utils.js"></script>
     <script src="/script.js"></script>
 
-  </head>
-  <body class="flex">
+</head>
+<body class="flex">
     <!-- Sidebar for active user list -->
     <div class="bg-gray-200 w-1/4 p-4">
       <h2 class="text-lg font-bold mb-2">Active Users</h2>
@@ -21,20 +21,17 @@
     </div>
 
     <!-- Main chat container -->
-
     <div class="w-full h-screen flex justify-center">
         <div class="max-w-2xl w-full md:w-3/4 lg:w-2/4 flex flex-col">
             <div class="bg-blue-500 px-4 py-4 rounded-b flex justify-between items-center">
                 <p class="text-lg font-bold text-white">LB1 Chat - M324</p>
-                <div class="flex items-center">
-                    <span class="text-white mr-2">Dark Mode:</span>
-                    <label class="switch">
-                        <input type="checkbox" id="themeToggle">
-                        <span class="slider round"></span>
-                    </label>
-                </div>
             </div>
             <div class="flex-grow flex flex-col justify-start p-4 gap-4 overflow-auto" id="messages">
+                <!-- Messages will be dynamically populated here -->
+            </div>
+            <!-- Typing Indicator -->
+            <div id="typingIndicator" class="text-sm italic text-gray-600 px-4 py-2">
+              <!-- Typing status will be dynamically updated here -->
             </div>
             <div class="bg-gray-100 px-4 py-4 flex items-center rounded-t">
                 <input 
@@ -51,46 +48,16 @@
                     class="h-6 w-6" 
                     fill="none" 
                     viewBox="0 0 24 24" 
-                    stroke="currentColor"
-                    >
+                    stroke="currentColor">
                         <path 
                         stroke-linecap="round" 
                         stroke-linejoin="round" 
                         stroke-width="2" 
-                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                        />
+                        d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
                     </svg>
                 </button>
             </div>
         </div>
-        <div id="typingIndicator" class="text-gray-600 italic"></div>
-        <div class="flex-grow flex flex-col justify-start p-4 gap-4" id="messages"></div>
-        <div class="bg-gray-100 px-4 py-4 flex items-center rounded-t">
-          <input
-            id="messageInput"
-            type="text"
-            placeholder="Type a message"
-            class="flex-grow px-4 py-2 rounded-full border-gray-200 focus:outline-none focus:ring-2 focus:ring-cyan-300"
-          />
-          <button class="ml-4 text-cyan-300 hover:text-cyan-400 focus:outline-none" id="sendButton">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
     </div>
-  </body>
+</body>
 </html>
-
