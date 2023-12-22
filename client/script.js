@@ -3,13 +3,10 @@
   let activeUsers = [];
 
   const socket = new WebSocket(generateBackendUrl());
-
-
   socket.addEventListener('open', () => {
     console.log('WebSocket connected!');
     socket.send(JSON.stringify({ type: 'newUser', user: myUser }));
   });
-
 
   socket.addEventListener('message', (event) => {
     const message = JSON.parse(event.data);
@@ -28,14 +25,12 @@
         break;
       case 'typing':
         typingUsers = message.users;
-
-        updateTypingIndicator();
+        updateTypingUsers(typingUsers);
         break;
       default:
         break;
     }
   });
-
 
   socket.addEventListener('close', () => {
     console.log('WebSocket closed.');
@@ -48,60 +43,45 @@
     console.error('WebSocket error:', event);
   });
 
-
-  // Update active users list
   const updateActiveUsersList = (users) => {
     const usersList = document.getElementById('activeUsers');
-    usersList.innerHTML = '';
-
+    usersList.innerHTML = ''; // Leere die Liste zuerst
     users.forEach(user => {
       const userElement = document.createElement('li');
       userElement.textContent = user.name;
       usersList.appendChild(userElement);
 
-    });
+
+  const updateTypingUsers = (users) => {
+    const typingElement = document.getElementById('typingUsers');
+    typingElement.textContent = users.length > 0 
+      ? `${users.map(u => u.name).join(', ')} is/are typing...` 
+      : '';
   };
 
-
-  // Event listeners
+  // Wait until the DOM is loaded before adding event listeners
   document.addEventListener('DOMContentLoaded', () => {
-    // Dark Mode Toggle
-    document.getElementById('themeToggle').addEventListener('change', (event) => {
+    const themeToggle = document.getElementById('themeToggle');
+    themeToggle.addEventListener('change', (event) => {
       document.body.classList.toggle('dark-mode', event.target.checked);
     });
 
-    // Send message button
-    document.getElementById('sendButton').addEventListener('click', sendMessage);
+    document.getElementById('sendButton').addEventListener('click', () => {
+      const message = document.getElementById('messageInput').value;
+      socket.send(JSON.stringify({ type: 'message', message, user: myUser }));
+      document.getElementById('messageInput').value = '';
+    });
 
-    // Enter key to send message
-    document.getElementById('messageInput').addEventListener('keydown', (event) => {
+    document.addEventListener('keydown', (event) => {
+      if (event.key.length === 1) {
+        socket.send(JSON.stringify({ type: 'typing', user: myUser }));
+      }
       if (event.key === 'Enter') {
-        sendMessage();
+        const message = document.getElementById('messageInput').value;
+        socket.send(JSON.stringify({ type: 'message', message, user: myUser }));
+        document.getElementById('messageInput').value = '';
       }
     });
   });
-
-  // Send message function
-  const sendMessage = () => {
-    const messageInput = document.getElementById('messageInput');
-    const message = messageInput.value.trim();
-    if (message) {
-      socket.send(JSON.stringify({ type: 'message', message, user: myUser }));
-      messageInput.value = '';
-    }
-  };
 })();
 
-
-
-
-  // Send message function
-  const sendMessage = () => {
-    const messageInput = document.getElementById('messageInput');
-    const message = messageInput.value.trim();
-    if (message) {
-      socket.send(JSON.stringify({ type: 'message', message, user: myUser }));
-      messageInput.value = '';
-    }
-  };
-})();
