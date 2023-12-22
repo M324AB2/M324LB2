@@ -36,6 +36,7 @@
     socket.addEventListener('error', (event) => {
       console.error('WebSocket error:', event);
     });
+
   
     // Wait until the DOM is loaded before adding event listeners
     document.addEventListener('DOMContentLoaded', (event) => {
@@ -43,6 +44,8 @@
       document.getElementById('sendButton').addEventListener('click', sendChatMessage);
       document.getElementById('messageInput').addEventListener('keydown', handleKeyDown);
       document.getElementById('messageInput').addEventListener('input', handleTyping);
+      const themeToggleButton = document.getElementById('themeToggle');
+          let isDarkMode = false;
     });
   
     function sendChatMessage() {
@@ -52,6 +55,28 @@
         document.getElementById('messageInput').value = '';
         updateTypingIndicator([]);
       }
+          themeToggleButton.addEventListener('click', () => {
+        isDarkMode = !isDarkMode;
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            themeToggleButton.textContent = 'Light Mode';
+        } else {
+            document.body.classList.remove('dark-mode');
+            themeToggleButton.textContent = 'Dark Mode';
+        }
+  });
+
+
+
+ 
+  
+
+
+
+  document.addEventListener('keydown', (event) => {
+    // Only send if the typed in key is not a modifier key
+    if (event.key.length === 1) {
+      socket.send(JSON.stringify({ type: 'typing', user: myUser }));
     }
   
     function handleKeyDown(event) {
@@ -81,3 +106,4 @@
   
   })();
   
+
