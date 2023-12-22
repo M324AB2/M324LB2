@@ -1,4 +1,5 @@
 (async () => {
+
   const myUser = await generateRandomUser();
   let activeUsers = [];
   let typingUsers = [];
@@ -76,3 +77,4 @@
     });
   });
 })();
+
